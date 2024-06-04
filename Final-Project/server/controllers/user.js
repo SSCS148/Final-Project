@@ -6,6 +6,7 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     console.log("Register request received:", req.body); // Log request data
 
+    
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
