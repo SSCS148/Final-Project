@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #ffffff16;
+    flex-direction: column;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#togglePassword {
+    margin-left: 10px;
+    cursor: pointer;
+}
