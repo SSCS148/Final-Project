@@ -5,10 +5,7 @@ const cors = require('cors');
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/mydb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose.connect('mongodb://localhost:27017/mydb', {});
 
 app.use(cors()); // Utiliser le middleware CORS
 app.use(bodyParser.json());

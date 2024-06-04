@@ -2,13 +2,33 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+exports.checkEmail = async (req, res) => {
+    const { email } = req.query;
+    console.log("Check email request received:", email);  // Log email being checked
+
+    try {
+        const user = await User.findOne({ email });
+        if (user) {
+            return res.status(200).json({ exists: true });
+        } else {
+            return res.status(200).json({ exists: false });
+        }
+    } catch (error) {
+        console.error("Error checking email:", error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     console.log("Register request received:", req.body); // Log request data
 
-
     try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             name,

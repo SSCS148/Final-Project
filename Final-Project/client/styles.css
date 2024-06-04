@@ -5,27 +5,72 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #ffffff16;
+    background-color: #f4f4f9;
     flex-direction: column;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 40px;
 }
 
 form {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 300px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
 
 .password-container {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
-input, button {
+input {
     padding: 10px;
     font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
-#togglePassword {
-    margin-left: 10px;
+button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
     cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#togglePassword, #toggleLoginPassword {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+}
+
+#message {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
 }
