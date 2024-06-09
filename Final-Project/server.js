@@ -1,14 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sequelize = require('./config/database'); // Chemin correct basé sur votre structure de projet
-const User = require('./models/User'); // Chemin correct basé sur votre structure de projet
+const sequelize = require('./server/config/database'); // Chemin correct basé sur votre structure de projet
+const User = require('./server/models/User'); // Chemin correct basé sur votre structure de projet
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const userRoutes = require('./routes/user'); // Chemin correct basé sur votre structure de projet
+const userRoutes = require('./server/routes/user'); // Chemin correct basé sur votre structure de projet
 app.use('/api/user', userRoutes);
 
 app.use(express.static('client'));

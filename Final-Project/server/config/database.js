@@ -1,9 +1,10 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('mydatabase', 'your_username', 'your_password', {
+const sequelize = new Sequelize('mydatabaseProject', 'myuser', 'sacha1234', {
   host: 'localhost',
-  port: 5432, // Utilisez le port que vous avez configuré dans postgresql.conf
-  dialect: 'postgres'
+  port: 5432,
+  dialect: 'postgres',
+  logging: false // Désactivez la journalisation SQL si nécessaire
 });
 
 module.exports = sequelize;
