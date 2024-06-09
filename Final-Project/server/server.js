@@ -1,8 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+<<<<<<< HEAD
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
+=======
+const jwt = require('jsonwebtoken');
+const { sequelize, User, Comment } = require('./models/models'); // Assurez-vous que le chemin est correct
+>>>>>>> 0709814 (ok)
 const app = express();
 const PORT = 5002;
 
@@ -11,7 +16,10 @@ app.use(cors());
 
 app.post('/api/user/register', async (req, res) => {
     const { name, email, password, age } = req.body;
+<<<<<<< HEAD
     console.log('Register request received:', req.body);  // Ajoutez cette ligne pour vérifier les données reçues
+=======
+>>>>>>> 0709814 (ok)
     try {
         const user = await User.create({ name, email, password, age });
         const token = jwt.sign({ id: user.id }, 'secretkey', { expiresIn: '1h' });
@@ -23,7 +31,10 @@ app.post('/api/user/register', async (req, res) => {
 
 app.post('/api/user/login', async (req, res) => {
     const { email, password } = req.body;
+<<<<<<< HEAD
     console.log('Login request received:', req.body);  // Ajoutez cette ligne pour vérifier les données reçues
+=======
+>>>>>>> 0709814 (ok)
     try {
         const user = await User.findOne({ where: { email, password } });
         if (!user) {
