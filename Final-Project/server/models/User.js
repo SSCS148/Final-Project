@@ -21,4 +21,16 @@ const User = sequelize.define('User', {
     }
 });
 
-module.exports = User;
+// Définissez Comment de la même manière si vous l'utilisez
+const Comment = sequelize.define('Comment', {
+    comment: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+});
+
+module.exports = { User, Comment, sequelize };
