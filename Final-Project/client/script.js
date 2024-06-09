@@ -83,6 +83,9 @@ document.getElementById('postForm').addEventListener('submit', async (e) => {
     try {
         const response = await fetch('http://localhost:5002/api/posts', {
             method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
             body: formData
         });
 
@@ -106,7 +109,8 @@ document.getElementById('commentForm').addEventListener('submit', async (e) => {
         const response = await fetch('http://localhost:5002/api/comments', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify({ comment })
         });
@@ -126,7 +130,10 @@ document.getElementById('commentForm').addEventListener('submit', async (e) => {
 document.getElementById('likeButton').addEventListener('click', async () => {
     try {
         const response = await fetch('http://localhost:5002/api/like', {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         });
 
         if (response.ok) {
@@ -145,7 +152,7 @@ function displayPost(post) {
     const postDiv = document.createElement('div');
     postDiv.innerHTML = `
         <p>${post.message}</p>
-        ${post.photo ? `<img src="${post.photo}" alt="Post photo">` : ''}
+        ${post.photo ? `<img src="data:image/jpeg;base64,${post.photo}" alt="Post photo">` : ''}
     `;
     postsDiv.appendChild(postDiv);
 }

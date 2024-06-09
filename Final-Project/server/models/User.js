@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Chemin correct basé sur votre structure de projet
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
     name: {
@@ -17,7 +17,7 @@ const User = sequelize.define('User', {
     },
     age: {
         type: DataTypes.INTEGER,
-        allowNull: true // ou false si cette colonne est obligatoire
+        allowNull: true
     }
 });
 

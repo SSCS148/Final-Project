@@ -1,32 +1,74 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const sequelize = require('./config/database'); // Chemin correct basé sur votre structure de projet
-const User = require('./models/User'); // Chemin correct basé sur votre structure de projet
-const auth = require('./middleware/auth'); // Ajout du middleware d'authentification
-
+const jwt = require('jsonwebtoken');
+const { sequelize, User, Comment } = require('./models/models'); // Assurez-vous que le chemin est correct
 const app = express();
+const PORT = 5002;
 
-app.use(cors());
 app.use(bodyParser.json());
 
-const userRoutes = require('./routes/user'); // Chemin correct basé sur votre structure de projet
-app.use('/api/user', userRoutes);
-
-app.use(express.static('client'));
-
-// Route de test pour vérifier le JWT
-app.get('/api/protected-route', auth, (req, res) => {
-    res.status(200).json({ message: 'Welcome to the protected route!' });
+app.post('/api/user/register', async (req, res) => {
+    const { name, email, password, age } = req.body;
+    try {
+        const user = await User.create({ name, email, password, age });
+        const token = jwt.sign({ id: user.id }, 'secretkey', { expiresIn: '1h' });
+        res.json({ token });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 });
 
-const PORT = process.env.PORT || 5002;
+app.post('/api/user/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ where: { email, password } });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+        const token = jwt.sign({ id: user.id }, 'secretkey', { expiresIn: '1h' });
+        res.json({ token });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
 
-sequelize.sync({ alter: true })
-  .then(result => {
-    console.log('Database synced');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch(err => {
-    console.error('Error syncing database:', err);
-  });
+app.get('/api/user/all', async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.json(users);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.post('/api/comments', async (req, res) => {
+    const { comment } = req.body;
+    const token = req.headers.authorization.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, 'secretkey');
+        const userId = decoded.id;
+        const newComment = await Comment.create({ comment, userId });
+        res.json(newComment);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.get('/api/comments', async (req, res) => {
+    try {
+        const comments = await Comment.findAll();
+        res.json({ comments });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.listen(PORT, async () => {
+    console.log(`Server running on port ${PORT}`);
+    try {
+        await sequelize.sync({ force: true });
+        console.log('Database synced');
+    } catch (error) {
+        console.error('Unable to sync database:', error);
+    }
+});

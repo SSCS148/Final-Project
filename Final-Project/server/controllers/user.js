@@ -23,6 +23,7 @@ exports.register = async (req, res) => {
     const { name, email, password, age } = req.body;
     console.log("Register request received:", req.body);
 
+    // Assurez-vous que age a une valeur par défaut s'il est vide
     const ageValue = age ? parseInt(age, 10) : 0;
 
     try {
@@ -68,15 +69,5 @@ exports.login = async (req, res) => {
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ error: 'Server error: ' + error.message });
-    }
-};
-
-exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await User.findAll();
-        res.status(200).json(users);
-    } catch (error) {
-        console.error("Error retrieving users:", error);
-        res.status(500).json({ error: 'Server error' });
     }
 };
