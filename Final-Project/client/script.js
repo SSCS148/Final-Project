@@ -1,68 +1,46 @@
-document.getElementById('email').addEventListener('blur', async (e) => {
-    const email = e.target.value;
-    const messageDiv = document.getElementById('message');
-    messageDiv.textContent = '';  // Clear previous messages
-
-    try {
-        const response = await fetch(`http://localhost:5001/api/user/check-email?email=${email}`);
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-
-        if (data.exists) {
-            messageDiv.textContent = 'Email already exists';
-            messageDiv.style.color = 'red';
-        } else {
-            messageDiv.textContent = `${email} introuvable`;
-            messageDiv.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        messageDiv.textContent = 'An error occurred while checking the email';
-        messageDiv.style.color = 'red';
-    }
-});
-
+// Gérer les soumissions du formulaire d'enregistrement
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const age = document.getElementById('age').value;
 
     try {
-        const response = await fetch('http://localhost:5001/api/user/register', {
+        const response = await fetch('http://localhost:5002/api/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, age })
         });
 
-        const messageDiv = document.getElementById('message');
-        const data = await response.json();
         if (response.ok) {
-            messageDiv.textContent = data.message;
-            messageDiv.style.color = 'green';
+            const data = await response.json();
+            console.log('User registered:', data);
+            document.getElementById('message').textContent = 'Registration successful!';
+            document.getElementById('message').style.color = 'green';
         } else {
-            messageDiv.textContent = data.error;
-            messageDiv.style.color = 'red';
+            const errorData = await response.json();
+            console.error('Error registering user:', errorData);
+            document.getElementById('message').textContent = 'Error: ' + errorData.error;
+            document.getElementById('message').style.color = 'red';
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred');
+        document.getElementById('message').textContent = 'Error: ' + error.message;
+        document.getElementById('message').style.color = 'red';
     }
 });
 
+// Gérer les soumissions du formulaire de connexion
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch('http://localhost:5001/api/user/login', {
+        const response = await fetch('http://localhost:5002/api/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -70,42 +48,131 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             body: JSON.stringify({ email, password })
         });
 
-        const messageDiv = document.getElementById('message');
-        const data = await response.json();
         if (response.ok) {
-            messageDiv.textContent = 'Login successful';
-            messageDiv.style.color = 'green';
+            const data = await response.json();
+            console.log('User logged in:', data);
+            document.getElementById('message').textContent = 'Login successful!';
+            document.getElementById('message').style.color = 'green';
+            // Vous pouvez stocker le token JWT dans le localStorage ou gérer la redirection ici
         } else {
-            messageDiv.textContent = data.error;
-            messageDiv.style.color = 'red';
+            const errorData = await response.json();
+            console.error('Error logging in user:', errorData);
+            document.getElementById('message').textContent = 'Error: ' + errorData.error;
+            document.getElementById('message').style.color = 'red';
         }
     } catch (error) {
         console.error('Error:', error);
-        messageDiv.textContent = 'An error occurred while logging in';
-        messageDiv.style.color = 'red';
+        document.getElementById('message').textContent = 'Error: ' + error.message;
+        document.getElementById('message').style.color = 'red';
     }
 });
 
-document.getElementById('togglePassword').addEventListener('click', () => {
-    const passwordField = document.getElementById('password');
-    const togglePasswordButton = document.getElementById('togglePassword');
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        togglePasswordButton.textContent = 'Hide';
-    } else {
-        passwordField.type = 'password';
-        togglePasswordButton.textContent = 'Show';
+// Gérer les soumissions des messages
+document.getElementById('postForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = document.getElementById('message').value;
+    const photo = document.getElementById('photo').files[0];
+    const formData = new FormData();
+    formData.append('message', message);
+    formData.append('photo', photo);
+
+    try {
+        const response = await fetch('http://localhost:5002/api/posts', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            displayPost(data);
+        } else {
+            console.error('Error posting message:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
+});
+
+// Gérer les soumissions des commentaires
+document.getElementById('commentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const comment = document.getElementById('comment').value;
+
+    try {
+        const response = await fetch('http://localhost:5002/api/comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ comment })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            displayComment(data);
+        } else {
+            console.error('Error posting comment:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+// Gérer les likes
+document.getElementById('likeButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('http://localhost:5002/api/like', {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('likeButton').textContent = `Like (${data.likes})`;
+        } else {
+            console.error('Error liking:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+function displayPost(post) {
+    const postsDiv = document.getElementById('posts');
+    const postDiv = document.createElement('div');
+    postDiv.innerHTML = `
+        <p>${post.message}</p>
+        ${post.photo ? `<img src="${post.photo}" alt="Post photo">` : ''}
+    `;
+    postsDiv.appendChild(postDiv);
+}
+
+function displayComment(comment) {
+    const commentsSection = document.getElementById('commentsSection');
+    const commentDiv = document.createElement('div');
+    commentDiv.textContent = comment.comment;
+    commentsSection.appendChild(commentDiv);
+}
+
+// Fonction pour afficher les messages d'erreur ou de succès
+function displayMessage(message, isError = false) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = message;
+    messageDiv.style.color = isError ? 'red' : 'green';
+}
+
+// Affichage/Masquage du mot de passe
+document.getElementById('togglePassword').addEventListener('click', () => {
+    const passwordInput = document.getElementById('password');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
+    document.getElementById('togglePassword').textContent = toggleButtonText;
 });
 
 document.getElementById('toggleLoginPassword').addEventListener('click', () => {
-    const passwordField = document.getElementById('loginPassword');
-    const togglePasswordButton = document.getElementById('toggleLoginPassword');
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        togglePasswordButton.textContent = 'Hide';
-    } else {
-        passwordField.type = 'password';
-        togglePasswordButton.textContent = 'Show';
-    }
+    const passwordInput = document.getElementById('loginPassword');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
+    document.getElementById('toggleLoginPassword').textContent = toggleButtonText;
 });

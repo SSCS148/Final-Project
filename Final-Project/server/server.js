@@ -1,21 +1,25 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const sequelize = require('./config/database'); // Chemin correct basé sur votre structure de projet
+const User = require('./models/User'); // Chemin correct basé sur votre structure de projet
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/mydb', {});
-
-app.use(cors()); // Utiliser le middleware CORS
+app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user'); // Chemin correct basé sur votre structure de projet
 app.use('/api/user', userRoutes);
 
-// Serve static files
 app.use(express.static('client'));
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5002;
+
+sequelize.sync({ alter: true })
+  .then(result => {
+    console.log('Database synced');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch(err => {
+    console.error('Error syncing database:', err);
+  });

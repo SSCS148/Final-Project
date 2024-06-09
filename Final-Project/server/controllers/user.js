@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 exports.checkEmail = async (req, res) => {
     const { email } = req.query;
-    console.log("Check email request received:", email);  // Log email being checked
+    console.log("Check email request received:", email);
 
     try {
         const user = await User.findOne({ email });
@@ -20,8 +20,8 @@ exports.checkEmail = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    const { name, email, password } = req.body;
-    console.log("Register request received:", req.body); // Log request data
+    const { name, email, password, age } = req.body;
+    console.log("Register request received:", req.body);
 
     try {
         const existingUser = await User.findOne({ email });
@@ -33,20 +33,21 @@ exports.register = async (req, res) => {
         const newUser = new User({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            age
         });
 
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        console.error("Error registering user:", error); // Log error
-        res.status(500).json({ error: 'Server error' });
+        console.error("Error registering user:", error);
+        res.status(500).json({ error: 'Server error: ' + error.message });
     }
 };
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    console.log("Login request received:", req.body); // Log request data
+    console.log("Login request received:", req.body);
 
     try {
         const user = await User.findOne({ email });
@@ -64,7 +65,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ id: user._id }, 'secretKey', { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error) {
-        console.error("Error logging in user:", error); // Log error
-        res.status(500).json({ error: 'Server error' });
+        console.error("Error logging in user:", error);
+        res.status(500).json({ error: 'Server error: ' + error.message });
     }
 };
