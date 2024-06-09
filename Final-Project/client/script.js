@@ -20,6 +20,8 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             console.log('User registered:', data);
             document.getElementById('message').textContent = 'Registration successful!';
             document.getElementById('message').style.color = 'green';
+            // Redirection vers main.html après l'enregistrement
+            window.location.href = 'main.html';
         } else {
             const errorData = await response.json();
             console.error('Error registering user:', errorData);
@@ -53,7 +55,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             console.log('User logged in:', data);
             document.getElementById('message').textContent = 'Login successful!';
             document.getElementById('message').style.color = 'green';
-            // Vous pouvez stocker le token JWT dans le localStorage ou gérer la redirection ici
+            // Stockage du token JWT et redirection vers main.html après la connexion
+            localStorage.setItem('token', data.token);
+            window.location.href = 'main.html';
         } else {
             const errorData = await response.json();
             console.error('Error logging in user:', errorData);
