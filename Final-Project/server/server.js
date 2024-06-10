@@ -6,8 +6,12 @@ const jwt = require('jsonwebtoken');
 const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
 =======
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
 const { sequelize, User, Comment } = require('./models/models'); // Assurez-vous que le chemin est correct
 >>>>>>> 0709814 (ok)
+=======
+const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
+>>>>>>> ec02934 (ok)
 const app = express();
 const PORT = 5002;
 
