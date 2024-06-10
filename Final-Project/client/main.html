@@ -4,8 +4,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbi Nahman and Breslov Hasidism</title>
-    <link rel="stylesheet" href="styles.css">
+    
 </head>
+<style>@import url('https://fonts.googleapis.com/css2?family=Kunstler+Script&display=swap');
+
+    body {
+        font-family: 'Kunstler Script', cursive;
+        margin: 0;
+        padding: 0;
+        background: url('https://i.etsystatic.com/18965517/r/il/91e1d2/3642966670/il_fullxfull.3642966670_c485.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+    }
+    
+    header {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    header h1 {
+        margin: 0;
+        font-size: 40px;
+    }
+    
+    nav {
+        background-color: #003366;
+        position: fixed;
+        width: 100%;
+        top: 60px; /* Adjust to match the header height */
+        z-index: 1000;
+        border-radius: 10%;
+        position: relative;
+    }
+    
+    nav ul {
+        list-style-type: none;
+        padding: 10px 0;
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        border-radius: 10%;
+    }
+    
+    nav ul li {
+        display: inline;
+    }
+    
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+    }
+    
+    nav ul li a:hover {
+        background-color: #005599;
+        border-radius: 5px;
+    }
+    
+    main {
+        width: 80%;
+        max-width: 800px;
+        padding: 160px 20px 20px; /* Add space for the fixed header and nav */
+        background-color: rgba(255, 255, 255, 0.591); /* Slightly transparent background */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin: 20px auto;
+        text-align: center;
+    }
+    
+    section {
+        margin-bottom: 20px;
+    }
+    
+    section h2 {
+        border-bottom: 2px solid #003366;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+    
+    .input-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: black;
+    }
+    
+    .input-group input,
+    .input-group textarea {
+        width: calc(100% - 22px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .password-container {
+        position: relative;
+    }
+    
+    .password-container button {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #000000;
+        padding: 5px;
+        font-size: 12px;
+        width: 50px;
+        height: 30px;
+    }
+    
+    button {
+        padding: 10px 15px;
+        border: none;
+        background-color: #003366;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+    
+    button:hover {
+        background-color: #d99e1c;
+    }
+    
+    #message {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #ff0000;
+    }
+    
+    footer {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        bottom: 0;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    #posts {
+        margin-top: 20px;
+    }
+    </style>
 <body>
     <header>
         <h1>Rabbi Nahman and Breslov Hasidism</h1>
@@ -17,31 +177,30 @@
             <li><a href="#stories">Stories</a></li>
             <li><a href="#principles">Principles</a></li>
             <li><a href="#celebrations">Celebrations</a></li>
+            <li><a href="#communication">Community</a></li>
         </ul>
     </nav>
     <main>
         <section id="biography">
             <h2>Biography of Rabbi Nahman</h2>
-            <p>Rabbi Nahman of Breslov was a great Hasidic master who lived from 1772 to 1810. ...</p>
+            <p>Rabbi Nahman of Breslov was a great Hasidic master who lived from 1772 to 1810...</p>
         </section>
         <section id="teachings">
             <h2>Teachings of Rabbi Nahman</h2>
-            <p>Rabbi Nahman taught the importance of prayer, joy, and trust in God. ...</p>
+            <p>Rabbi Nahman taught the importance of prayer, joy, and trust in God...</p>
         </section>
         <section id="stories">
             <h2>Stories and Legends</h2>
-            <p>There are many stories and legends about the miracles performed by Rabbi Nahman ...</p>
+            <p>There are many stories and legends about the miracles performed by Rabbi Nahman...</p>
         </section>
         <section id="principles">
             <h2>Principles of Breslov Hasidism</h2>
-            <p>Breslov Hasidism focuses on simplicity, sincerity, and joy. ...</p>
+            <p>Breslov Hasidism focuses on simplicity, sincerity, and joy...</p>
         </section>
         <section id="celebrations">
             <h2>Celebrations and Pilgrimages</h2>
-            <p>Every year, thousands of people travel to Uman for Rosh Hashanah ...</p>
+            <p>Every year, thousands of people travel to Uman for Rosh Hashanah...</p>
         </section>
-
-        <!-- New communication section -->
         <section id="communication">
             <h2>Community Messages</h2>
             <form id="postForm">
@@ -57,8 +216,6 @@
             </form>
             <div id="posts"></div>
         </section>
-
-        <!-- New comments and likes section -->
         <section id="comments">
             <h2>Comments and Likes</h2>
             <form id="commentForm">
@@ -66,10 +223,23 @@
                     <label for="comment">Comment</label>
                     <textarea id="comment" required></textarea>
                 </div>
+                <input type="hidden" id="postId">
                 <button type="submit">Post Comment</button>
             </form>
             <button id="likeButton">Like</button>
             <div id="commentsSection"></div>
+        </section>
+        <section id="chat">
+            <h2>Chat</h2>
+            <div id="chatMessages"></div>
+            <form id="chatForm">
+                <div class="input-group">
+                    <label for="chatMessage">Message</label>
+                    <textarea id="chatMessage"required></textarea>
+                    <textarea id="chatMessage" required></textarea>
+                </div>
+                <button type="submit">Send</button>
+            </form>
         </section>
     </main>
     <footer>

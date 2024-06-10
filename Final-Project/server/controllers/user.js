@@ -24,14 +24,15 @@ exports.register = async (req, res) => {
     console.log("Register request received:", req.body);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> 0709814 (ok)
+=======
+>>>>>>> 45302ab (update restore)
     // Assurez-vous que age a une valeur par défaut s'il est vide
     const ageValue = age ? parseInt(age, 10) : 0;
 
-=======
->>>>>>> parent of 385feb2 (update)
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
