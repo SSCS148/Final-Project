@@ -28,19 +28,20 @@ exports.getAllComments = async (req, res) => {
 };
 
 exports.likeComment = async (req, res) => {
-    const { commentId } = req.body;
+  try {
+    const commentId = req.body.commentId;
+    const comment = await Comment.findByPk(commentId);
 
-    try {
-        const comment = await Comment.findByPk(commentId);
-        if (comment) {
-            comment.likes += 1;
-            await comment.save();
-            res.json(comment);
-        } else {
-            res.status(404).json({ message: 'Comment not found' });
-        }
-    } catch (error) {
-        console.error('Error liking comment:', error);
-        res.status(500).json({ message: error.message });
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
     }
+
+    comment.likes += 1;
+    await comment.save();
+
+    res.json({ likes: comment.likes });
+  } catch (error) {
+    console.error('Error liking comment:', error);
+    res.status(500).json({ message: error.message });
+  }
 };

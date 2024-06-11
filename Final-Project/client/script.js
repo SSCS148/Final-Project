@@ -174,20 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Gérer les likes
   async function likeComment(commentId) {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:5002/api/comments/like", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({ commentId }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        document.getElementById(`likeCount-${commentId}`).textContent =
-          data.likes;
+        document.getElementById(`likeCount-${commentId}`).textContent = data.likes;
       } else {
         console.error("Error liking comment:", response.statusText);
       }
@@ -195,10 +192,23 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error:", error);
     }
   }
-
+  
+  function displayComment(comment) {
+    const commentsSection = document.getElementById("commentsSection");
+    const commentDiv = document.createElement("div");
+    commentDiv.classList.add('comment-container');
+    commentDiv.innerHTML = `
+      <p>${comment.comment}</p>
+      <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
+      <button onclick="likeComment(${comment.id})">Like</button>
+    `;
+    commentsSection.appendChild(commentDiv);
+  }
+  
   function displayPost(post) {
     const postsDiv = document.getElementById("posts");
     const postDiv = document.createElement("div");
+    postDiv.classList.add('post-container');
     postDiv.innerHTML = `
       <p>${post.message}</p>
       ${post.photo ? `<img src="/uploads/${post.photo}" alt="Post photo" style="max-width:100%; height:auto;">` : ""}
@@ -209,11 +219,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayComment(comment) {
     const commentsSection = document.getElementById("commentsSection");
     const commentDiv = document.createElement("div");
+    commentDiv.classList.add('comment-container'); // Ajouter la classe CSS
     commentDiv.innerHTML = `
-            <p>${comment.comment}</p>
-            <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
-            <button onclick="likeComment(${comment.id})">Like</button>
-        `;
+      <p>${comment.comment}</p>
+      <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
+      <button onclick="likeComment(${comment.id})">Like</button>
+    `;
     commentsSection.appendChild(commentDiv);
   }
 
