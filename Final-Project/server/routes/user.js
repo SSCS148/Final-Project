@@ -12,5 +12,6 @@ router.get('/all', userController.getAllUsers);
 router.post('/comments', commentController.createComment);
 router.post('/like', commentController.likeComment);
 router.get('/comments', commentController.getAllComments);
+router.post('/refresh-token', userController.refreshToken);
 
 module.exports = router;

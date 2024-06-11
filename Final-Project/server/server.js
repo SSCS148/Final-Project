@@ -24,12 +24,15 @@ const app = express();
 
 // Configuration de multer pour l'upload de fichiers
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+  destination: function (req, file, cb) {
+      const uploadPath = path.join(__dirname, 'uploads');
+      cb(null, uploadPath); // Utilisation du chemin absolu
+  },
+  filename: function (req, file, cb) {
+      const filename = Date.now() + path.extname(file.originalname);
+      console.log('Saving file as', filename); // Ajout d'un log pour le nom de fichier
+      cb(null, filename); // Nom du fichier
+  }
 });
 const upload = multer({ storage: storage });
 
@@ -73,13 +76,16 @@ app.post('/api/user/login', async (req, res) => {
 =======
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Servir les fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const userRoutes = require('./routes/user.js');
 const postRoutes = require('./routes/post.js');
-const commentRoutes = require('./routes/comment.js'); // Ajoutez cette ligne
+const commentRoutes = require('./routes/comment.js');
 
 app.use('/api/user', userRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes); // Ajoutez cette ligne
+app.use('/api/comments', commentRoutes);
 app.use(express.static('client'));
 >>>>>>> a8ade0e (update)
 
@@ -93,3 +99,8 @@ sequelize.sync({ alter: true })
   .catch(err => {
     console.error('Error syncing database:', err);
   });
+
+// Route de test pour vérifier l'accès aux fichiers
+app.get('/test-upload', (req, res) => {
+  res.sendFile(path.join(__dirname, 'uploads', '1718114949329.JPG'));
+});

@@ -95,3 +95,20 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+exports.refreshToken = (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+      return res.status(403).send('Token is required');
+    }
+  
+    jwt.verify(token, 'secretKey', (err, decoded) => {
+      if (err) {
+        return res.status(401).send('Invalid token');
+      }
+  
+      const newToken = jwt.sign({ id: decoded.id }, 'secretKey', { expiresIn: '24h' });
+      res.json({ token: newToken });
+    });
+  };
+  
