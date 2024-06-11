@@ -7,7 +7,7 @@ exports.checkEmail = async (req, res) => {
     console.log("Check email request received:", email);
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ where: { email } });
         if (user) {
             return res.status(200).json({ exists: true });
         } else {
@@ -25,6 +25,7 @@ exports.register = async (req, res) => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> 0709814 (ok)
@@ -33,8 +34,10 @@ exports.register = async (req, res) => {
     // Assurez-vous que age a une valeur par défaut s'il est vide
     const ageValue = age ? parseInt(age, 10) : 0;
 
+=======
+>>>>>>> a8ade0e (update)
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             return res.status(400).json({ error: 'Email already exists' });
         }
@@ -48,7 +51,11 @@ exports.register = async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
+
+        // Générer le token JWT
+        const token = jwt.sign({ id: newUser.id }, 'secretKey', { expiresIn: '24h' });
+
+        res.status(201).json({ message: 'User registered successfully', token });
     } catch (error) {
         console.error("Error registering user:", error);
         res.status(500).json({ error: 'Server error: ' + error.message });
@@ -60,7 +67,7 @@ exports.login = async (req, res) => {
     console.log("Login request received:", req.body);
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ where: { email } });
         if (!user) {
             console.error("User not found");
             return res.status(404).json({ error: 'User not found' });
@@ -72,10 +79,19 @@ exports.login = async (req, res) => {
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: user._id }, 'secretKey', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id }, 'secretKey', { expiresIn: '24h' });
         res.status(200).json({ token });
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ error: 'Server error: ' + error.message });
+    }
+};
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
     }
 };

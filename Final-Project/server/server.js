@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
@@ -12,10 +13,29 @@ const { sequelize, User, Comment } = require('./models/models'); // Assurez-vous
 =======
 const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
 >>>>>>> ec02934 (ok)
-const app = express();
-const PORT = 5002;
+=======
+const cors = require('cors');
+const sequelize = require('./config/database');
+const multer = require('multer');
+const path = require('path');
 
+>>>>>>> a8ade0e (update)
+const app = express();
+
+// Configuration de multer pour l'upload de fichiers
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+app.use(cors());
 app.use(bodyParser.json());
+<<<<<<< HEAD
 app.use(cors());
 
 app.post('/api/user/register', async (req, res) => {
@@ -50,44 +70,26 @@ app.post('/api/user/login', async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+=======
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/user/all', async (req, res) => {
-    try {
-        const users = await User.findAll();
-        res.json(users);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+const userRoutes = require('./routes/user.js');
+const postRoutes = require('./routes/post.js');
+const commentRoutes = require('./routes/comment.js'); // Ajoutez cette ligne
 
-app.post('/api/comments', async (req, res) => {
-    const { comment } = req.body;
-    const token = req.headers.authorization.split(' ')[1];
-    try {
-        const decoded = jwt.verify(token, 'secretkey');
-        const userId = decoded.id;
-        const newComment = await Comment.create({ comment, userId });
-        res.json(newComment);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+app.use('/api/user', userRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes); // Ajoutez cette ligne
+app.use(express.static('client'));
+>>>>>>> a8ade0e (update)
 
-app.get('/api/comments', async (req, res) => {
-    try {
-        const comments = await Comment.findAll();
-        res.json({ comments });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+const PORT = process.env.PORT || 5002;
 
-app.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`);
-    try {
-        await sequelize.sync({ force: true });
-        console.log('Database synced');
-    } catch (error) {
-        console.error('Unable to sync database:', error);
-    }
-});
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log('Database synced');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch(err => {
+    console.error('Error syncing database:', err);
+  });

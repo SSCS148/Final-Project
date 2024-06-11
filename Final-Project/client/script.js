@@ -1,189 +1,271 @@
-// Gérer les soumissions du formulaire d'enregistrement
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const age = document.getElementById('age').value;
+document.addEventListener('DOMContentLoaded', () => {
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+    const postForm = document.getElementById('postForm');
+    const commentForm = document.getElementById('commentForm');
 
-    try {
-        const response = await fetch('http://localhost:5002/api/user/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email, password, age })
-        });
+    // Gérer les soumissions du formulaire d'enregistrement
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const age = document.getElementById('age').value;
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('User registered:', data);
-            document.getElementById('message').textContent = 'Registration successful!';
-            document.getElementById('message').style.color = 'green';
-            // Redirection vers main.html après l'enregistrement
-            window.location.href = 'main.html';
-        } else {
-            const errorData = await response.json();
-            console.error('Error registering user:', errorData);
-            document.getElementById('message').textContent = 'Error: ' + errorData.error;
-            document.getElementById('message').style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('message').textContent = 'Error: ' + error.message;
-        document.getElementById('message').style.color = 'red';
-    }
-});
+            try {
+                const response = await fetch('http://localhost:5002/api/user/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password, age })
+                });
 
-// Gérer les soumissions du formulaire de connexion
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        const response = await fetch('http://localhost:5002/api/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('User logged in:', data);
-            document.getElementById('message').textContent = 'Login successful!';
-            document.getElementById('message').style.color = 'green';
-            // Stockage du token JWT et redirection vers main.html après la connexion
-            localStorage.setItem('token', data.token);
-            window.location.href = 'main.html';
-        } else {
-            const errorData = await response.json();
-            console.error('Error logging in user:', errorData);
-            document.getElementById('message').textContent = 'Error: ' + errorData.error;
-            document.getElementById('message').style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('message').textContent = 'Error: ' + error.message;
-        document.getElementById('message').style.color = 'red';
-    }
-});
-
-// Gérer les soumissions des messages
-document.getElementById('postForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const message = document.getElementById('message').value;
-    const photo = document.getElementById('photo').files[0];
-    const formData = new FormData();
-    formData.append('message', message);
-    formData.append('photo', photo);
-
-    try {
-        const response = await fetch('http://localhost:5002/api/posts', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            body: formData
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            displayPost(data);
-        } else {
-            console.error('Error posting message:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
-// Gérer les soumissions des commentaires
-document.getElementById('commentForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const comment = document.getElementById('comment').value;
-
-    try {
-        const response = await fetch('http://localhost:5002/api/comments', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            body: JSON.stringify({ comment })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            displayComment(data);
-        } else {
-            console.error('Error posting comment:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
-// Gérer les likes
-document.getElementById('likeButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch('http://localhost:5002/api/like', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('User registered:', data);
+                    document.getElementById('message').textContent = 'Registration successful!';
+                    document.getElementById('message').style.color = 'green';
+                    window.location.href = 'main.html';
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error registering user:', errorData);
+                    document.getElementById('message').textContent = 'Error: ' + errorData.error;
+                    document.getElementById('message').style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'Error: ' + error.message;
+                document.getElementById('message').style.color = 'red';
             }
         });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('likeButton').textContent = `Like (${data.likes})`;
-        } else {
-            console.error('Error liking:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error:', error);
     }
-});
 
-function displayPost(post) {
-    const postsDiv = document.getElementById('posts');
-    const postDiv = document.createElement('div');
-    postDiv.innerHTML = `
-        <p>${post.message}</p>
-        ${post.photo ? `<img src="data:image/jpeg;base64,${post.photo}" alt="Post photo">` : ''}
-    `;
-    postsDiv.appendChild(postDiv);
-}
+    // Gérer les soumissions du formulaire de connexion
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
-function displayComment(comment) {
-    const commentsSection = document.getElementById('commentsSection');
-    const commentDiv = document.createElement('div');
-    commentDiv.textContent = comment.comment;
-    commentsSection.appendChild(commentDiv);
-}
+            try {
+                const response = await fetch('http://localhost:5002/api/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-// Fonction pour afficher les messages d'erreur ou de succès
-function displayMessage(message, isError = false) {
-    const messageDiv = document.getElementById('message');
-    messageDiv.textContent = message;
-    messageDiv.style.color = isError ? 'red' : 'green';
-}
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('User logged in:', data);
+                    document.getElementById('message').textContent = 'Login successful!';
+                    document.getElementById('message').style.color = 'green';
+                    localStorage.setItem('token', data.token);
+                    window.location.href = 'main.html';
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error logging in user:', errorData);
+                    document.getElementById('message').textContent = 'Error: ' + errorData.error;
+                    document.getElementById('message').style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'Error: ' + error.message;
+                document.getElementById('message').style.color = 'red';
+            }
+        });
+    }
 
-// Affichage/Masquage du mot de passe
-document.getElementById('togglePassword').addEventListener('click', () => {
-    const passwordInput = document.getElementById('password');
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
-    document.getElementById('togglePassword').textContent = toggleButtonText;
-});
+    // Gérer les soumissions des messages
+    if (postForm) {
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('message').value;
+            const photo = document.getElementById('photo').files[0];
+            const formData = new FormData();
+            formData.append('message', message);
+            formData.append('photo', photo);
 
-document.getElementById('toggleLoginPassword').addEventListener('click', () => {
-    const passwordInput = document.getElementById('loginPassword');
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
-    document.getElementById('toggleLoginPassword').textContent = toggleButtonText;
-});
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5002/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayPost(data);
+                } else {
+                    console.error('Error posting message:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    // Gérer les soumissions des commentaires
+    if (commentForm) {
+        commentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const comment = document.getElementById('comment').value;
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5002/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ comment })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayComment(data);
+                } else {
+                    console.error('Error posting comment:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    // Charger les commentaires au chargement de la page
+    async function loadComments() {
+        try {
+            const response = await fetch('http://localhost:5002/api/comments', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const comments = await response.json();
+                comments.forEach(displayComment);
+            } else {
+                console.error('Error fetching comments:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    loadComments();
+
+    // Gérer les likes
+    async function likeComment(commentId) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5002/api/comments/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ commentId })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById(`likeCount-${commentId}`).textContent = data.likes;
+            } else {
+                console.error('Error liking comment:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function displayPost(post) {
+        const postsDiv = document.getElementById('posts');
+        const postDiv = document.createElement('div');
+        postDiv.innerHTML = `
+            <p>${post.message}</p>
+            ${post.photo ? `<img src="uploads/${post.photo}" alt="Post photo">` : ''}
+        `;
+        postsDiv.appendChild(postDiv);
+    }
+
+    function displayComment(comment) {
+        const commentsSection = document.getElementById('commentsSection');
+        const commentDiv = document.createElement('div');
+        commentDiv.innerHTML = `
+            <p>${comment.comment}</p>
+            <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
+            <button onclick="likeComment(${comment.id})">Like</button>
+        `;
+        commentsSection.appendChild(commentDiv);
+    }
+
+    // Charger les utilisateurs au chargement de la page
+    async function loadUsers() {
+        try {
+            const response = await fetch('http://localhost:5002/api/user/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                displayUsers(users);
+            } else {
+                console.error('Error fetching users:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function displayUsers(users) {
+        const usersList = document.getElementById('usersList');
+        usersList.innerHTML = ''; // Clear existing users
+        users.forEach(user => {
+            const userDiv = document.createElement('div');
+            userDiv.innerHTML = `
+                <p>Name: ${user.name}</p>
+                <p>Email: ${user.email}</p>
+                <p>Age: ${user.age}</p>
+                <hr>
+            `;
+            usersList.appendChild(userDiv);
+        });
+    }
+
+    loadUsers();
+
+    // Affichage/Masquage du mot de passe
+    const togglePassword = document.getElementById('togglePassword');
+    if (togglePassword) {
+        togglePassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
+            togglePassword.textContent = toggleButtonText;
+        });
+    }
+
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    if (toggleLoginPassword) {
+        toggleLoginPassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('loginPassword');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            const toggleButtonText = type === 'password' ? 'Show' : 'Hide';
+            toggleLoginPassword.textContent = toggleButtonText;
+            });
+            }
+            });
