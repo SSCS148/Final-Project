@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/User.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -23,19 +23,6 @@ exports.register = async (req, res) => {
     const { name, email, password, age } = req.body;
     console.log("Register request received:", req.body);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 0709814 (ok)
-=======
->>>>>>> 45302ab (update restore)
-    // Assurez-vous que age a une valeur par défaut s'il est vide
-    const ageValue = age ? parseInt(age, 10) : 0;
-
-=======
->>>>>>> a8ade0e (update)
     try {
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {

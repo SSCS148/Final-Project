@@ -1,34 +1,10 @@
-<<<<<<< HEAD
-const express = require('express');
-const bodyParser = require('body-parser');
-<<<<<<< HEAD
-<<<<<<< HEAD
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
-=======
-const jwt = require('jsonwebtoken');
-<<<<<<< HEAD
-const { sequelize, User, Comment } = require('./models/models'); // Assurez-vous que le chemin est correct
->>>>>>> 0709814 (ok)
-=======
-const { sequelize, User, Comment } = require('./models/User'); // Assurez-vous que le chemin est correct
->>>>>>> ec02934 (ok)
-=======
-const cors = require('cors');
-const sequelize = require('./config/database');
-const multer = require('multer');
-const path = require('path');
-=======
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./config/database");
 const multer = require("multer");
 const path = require("path");
->>>>>>> bd0b443 (update)
 
->>>>>>> a8ade0e (update)
 const app = express();
 
 // Configuration de multer pour l'upload de fichiers
@@ -47,42 +23,6 @@ const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(bodyParser.json());
-<<<<<<< HEAD
-app.use(cors());
-
-app.post('/api/user/register', async (req, res) => {
-    const { name, email, password, age } = req.body;
-<<<<<<< HEAD
-    console.log('Register request received:', req.body);  // Ajoutez cette ligne pour vérifier les données reçues
-=======
->>>>>>> 0709814 (ok)
-    try {
-        const user = await User.create({ name, email, password, age });
-        const token = jwt.sign({ id: user.id }, 'secretkey', { expiresIn: '1h' });
-        res.json({ token });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-app.post('/api/user/login', async (req, res) => {
-    const { email, password } = req.body;
-<<<<<<< HEAD
-    console.log('Login request received:', req.body);  // Ajoutez cette ligne pour vérifier les données reçues
-=======
->>>>>>> 0709814 (ok)
-    try {
-        const user = await User.findOne({ where: { email, password } });
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-        const token = jwt.sign({ id: user.id }, 'secretkey', { expiresIn: '1h' });
-        res.json({ token });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-=======
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Servir les fichiers statiques
@@ -92,18 +32,10 @@ const userRoutes = require("./routes/user.js");
 const postRoutes = require("./routes/post.js");
 const commentRoutes = require("./routes/comment.js");
 
-<<<<<<< HEAD
-app.use('/api/user', userRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
-app.use(express.static('client'));
->>>>>>> a8ade0e (update)
-=======
 app.use("/api/user", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use(express.static("client"));
->>>>>>> bd0b443 (update)
 
 const PORT = process.env.PORT || 5002;
 

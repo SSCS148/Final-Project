@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/user'); // Import correct du contrôleur user
-const commentController = require('../controllers/comment'); // Import correct du contrôleur comment
+const userController = require('../controllers/user');
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);

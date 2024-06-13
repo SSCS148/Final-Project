@@ -1,4 +1,4 @@
-const sequelize = require("./server/config/database.js"); // Chemin correct basé sur votre structure de projet
+const sequelize = require('./server/config/database'); // Chemin correct basé sur votre structure de projet
 
 async function testConnection() {
   try {
