@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database.js');
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
     name: {
@@ -21,16 +21,4 @@ const User = sequelize.define('User', {
     }
 });
 
-// Définissez Comment de la même manière si vous l'utilisez
-const Comment = sequelize.define('Comment', {
-    comment: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
-});
-
-module.exports = { User, Comment, sequelize };
+module.exports = User;
