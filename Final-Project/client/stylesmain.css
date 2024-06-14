@@ -120,7 +120,7 @@ button:hover {
 #message {
   margin-top: 10px;
   font-size: 14px;
-  color: #ff0000;
+  color: #000000;
 }
 footer {
   background-color: #003366;
@@ -130,7 +130,7 @@ footer {
   text-align: center;
   position: relative;
   bottom: 0;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.275);
 }
 #posts {
     display: flex;
@@ -139,7 +139,7 @@ footer {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #f9f9f991;
   }
   
   .post-container {
@@ -172,5 +172,43 @@ footer {
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f900;
+}
+/* Autres styles déjà présents */
+
+#commentsBanner {
+  max-height: 400px; /* Hauteur maximale pour la bannière */
+  overflow-y: hidden; /* Masquer le défilement par défaut */
+  border: 1px solid #ccc;
+  padding: 50px;
+  border-radius: 5px;
+  background-color: #f9f9f900;
+  position: relative;
+}
+
+#commentsSection {
+  position: relative;
+  width: 100%;
+  animation: scrollComments 10s linear infinite;
+}
+
+@keyframes scrollComments {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+
+.comment-container {
+  background-color: rgba(255, 255, 255, 0.725);
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.comment-container p {
+  margin: 5px 0;
 }

@@ -123,10 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (commentForm) {
     commentForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const comment = document.getElementById("comment").value;
+      const commentInput = document.getElementById("comment");
+      const comment = commentInput.value;
+      const token = localStorage.getItem("token");
+
+      if (!comment) {
+        alert("Comment cannot be empty");
+        return;
+      }
 
       try {
-        const token = localStorage.getItem("token");
         const response = await fetch("http://localhost:5002/api/comments", {
           method: "POST",
           headers: {
@@ -136,14 +142,17 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ comment }),
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          displayComment(data);
-        } else {
-          console.error("Error posting comment:", response.statusText);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Bad Request");
         }
+
+        const data = await response.json();
+        displayComment(data);
+        commentInput.value = ""; // Clear the input field
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error posting comment:", error);
+        alert("Error posting comment: " + error.message);
       }
     });
   }
@@ -181,10 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({ commentId }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-        document.getElementById(`likeCount-${commentId}`).textContent = data.likes;
+        document.getElementById(`likeCount-${commentId}`).textContent =
+          data.likes;
       } else {
         console.error("Error liking comment:", response.statusText);
       }
@@ -192,40 +202,32 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error:", error);
     }
   }
-  
-  function displayComment(comment) {
-    const commentsSection = document.getElementById("commentsSection");
-    const commentDiv = document.createElement("div");
-    commentDiv.classList.add('comment-container');
-    commentDiv.innerHTML = `
-      <p>${comment.comment}</p>
-      <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
-      <button onclick="likeComment(${comment.id})">Like</button>
-    `;
-    commentsSection.appendChild(commentDiv);
-  }
-  
-  function displayPost(post) {
-    const postsDiv = document.getElementById("posts");
-    const postDiv = document.createElement("div");
-    postDiv.classList.add('post-container');
-    postDiv.innerHTML = `
-      <p>${post.message}</p>
-      ${post.photo ? `<img src="/uploads/${post.photo}" alt="Post photo" style="max-width:100%; height:auto;">` : ""}
-    `;
-    postsDiv.appendChild(postDiv);
-  }
 
   function displayComment(comment) {
     const commentsSection = document.getElementById("commentsSection");
     const commentDiv = document.createElement("div");
-    commentDiv.classList.add('comment-container'); // Ajouter la classe CSS
+    commentDiv.classList.add("comment-container");
     commentDiv.innerHTML = `
       <p>${comment.comment}</p>
       <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
       <button onclick="likeComment(${comment.id})">Like</button>
     `;
     commentsSection.appendChild(commentDiv);
+  }
+
+  function displayPost(post) {
+    const postsDiv = document.getElementById("posts");
+    const postDiv = document.createElement("div");
+    postDiv.classList.add("post-container");
+    postDiv.innerHTML = `
+      <p>${post.message}</p>
+      ${
+        post.photo
+          ? `<img src="/uploads/${post.photo}" alt="Post photo" style="max-width:100%; height:auto;">`
+          : ""
+      }
+    `;
+    postsDiv.appendChild(postDiv);
   }
 
   // Charger les utilisateurs au chargement de la page
@@ -291,22 +293,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 async function loadPosts() {
   try {
     const response = await fetch("http://localhost:5002/api/posts");
     const posts = await response.json();
     const postsContainer = document.getElementById("postsContainer");
-
     posts.forEach((post) => {
       const postDiv = document.createElement("div");
       postDiv.innerHTML = `
-          <p>${post.message}</p>
-          ${
-            post.photo
-              ? `<img src="uploads/${post.photo}" alt="Post photo">`
-              : ""
-          }
-        `;
+            <p>${post.message}</p>
+            ${
+              post.photo
+                ? `<img src="uploads/${post.photo}" alt="Post photo">`
+                : ""
+            }
+          `;
       postsContainer.appendChild(postDiv);
     });
   } catch (error) {

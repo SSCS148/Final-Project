@@ -39,17 +39,31 @@ app.use(express.static("client"));
 const PORT = process.env.PORT || 5002;
 
 sequelize
-  .sync({ force: true }) // Utilisez `force: true` pour supprimer et recréer les tables
-  .then(() => {
+  .sync({ alter: true }) // Utilisez `alter: true` pour mettre à jour les tables sans les recréer
+  .then(async () => {
     console.log("Database synced");
-    // Ajoutez des utilisateurs initiaux ici pour éviter les erreurs de contrainte de clé étrangère
     const User = require("./models/User");
-    return User.bulkCreate([
-      { name: "User1", email: "user1@example.com", password: "password1" },
-      { name: "User2", email: "user2@example.com", password: "password2" },
-    ]);
-  })
-  .then(() => {
+
+    // Vérifier si les utilisateurs existent déjà
+    const user1 = await User.findOne({ where: { email: "user1@example.com" } });
+    const user2 = await User.findOne({ where: { email: "user2@example.com" } });
+
+    // Ajouter les utilisateurs si nécessaire
+    if (!user1) {
+      await User.create({
+        name: "User1",
+        email: "user1@example.com",
+        password: "password1",
+      });
+    }
+    if (!user2) {
+      await User.create({
+        name: "User2",
+        email: "user2@example.com",
+        password: "password2",
+      });
+    }
+
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
