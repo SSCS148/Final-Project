@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./config/database.js");
+const sequelize = require("./config/database");
 const multer = require("multer");
 const path = require("path");
 
@@ -28,6 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Servir les fichiers statiques depuis le dossier "uploads"
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Servir les fichiers statiques du dossier "client"
+app.use(express.static(path.join(__dirname, '../client')));
+
 const userRoutes = require("./routes/user.js");
 const postRoutes = require("./routes/post.js");
 const commentRoutes = require("./routes/comment.js");
@@ -35,7 +39,6 @@ const commentRoutes = require("./routes/comment.js");
 app.use("/api/user", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
-app.use(express.static("client"));
 
 const PORT = process.env.PORT || 5002;
 
@@ -43,7 +46,7 @@ sequelize
   .sync({ alter: true }) // Utilisez `alter: true` pour mettre à jour les tables sans les recréer
   .then(async () => {
     console.log("Database synced");
-    const User = require("./models/User.js");
+    const User = require("./models/User");
 
     // Vérifier si les utilisateurs existent déjà
     const user1 = await User.findOne({ where: { email: "user1@example.com" } });
