@@ -10,7 +10,7 @@ const app = express();
 // Configuration de multer pour l'upload de fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, "uploads");
+    const uploadPath = path.join(__dirname, "../uploads");
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
@@ -25,7 +25,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Servir les fichiers statiques depuis le dossier "uploads"
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const userRoutes = require("./routes/user.js");
 const postRoutes = require("./routes/post.js");
@@ -71,5 +72,5 @@ sequelize
   });
 
 app.get("/test-upload", (req, res) => {
-  res.sendFile(path.join(__dirname, "uploads", "1718114949329.JPG"));
+  res.sendFile(path.join(__dirname, "../uploads"));
 });

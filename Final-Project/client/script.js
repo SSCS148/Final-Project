@@ -95,7 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const photo = document.getElementById("photo").files[0];
       const formData = new FormData();
       formData.append("message", message);
-      formData.append("photo", photo);
+      if (photo) {
+        formData.append("photo", photo);
+      }
 
       try {
         const token = localStorage.getItem("token");
@@ -181,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadComments();
 
   // Gérer les likes
-  async function likeComment(commentId) {
+  window.likeComment = async function(commentId) {
     try {
       const response = await fetch("http://localhost:5002/api/comments/like", {
         method: "POST",
@@ -208,27 +210,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const commentDiv = document.createElement("div");
     commentDiv.classList.add("comment-container");
     commentDiv.innerHTML = `
+      ${comment.photo ? `<img src="uploads/${comment.photo}" alt="Comment photo">` : ""}
       <p>${comment.comment}</p>
-      <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
-      <button onclick="likeComment(${comment.id})">Like</button>
+      <div class="like-container">
+        <p>Likes: <span id="likeCount-${comment.id}">${comment.likes}</span></p>
+        <button onclick="likeComment(${comment.id})">Like</button>
+      </div>
     `;
     commentsSection.appendChild(commentDiv);
   }
 
   function displayPost(post) {
-    const postsDiv = document.getElementById("posts");
+    const postsDiv = document.getElementById("postsContainer");
     const postDiv = document.createElement("div");
     postDiv.classList.add("post-container");
     postDiv.innerHTML = `
       <p>${post.message}</p>
       ${
         post.photo
-          ? `<img src="/uploads/${post.photo}" alt="Post photo" style="max-width:100%; height:auto;">`
+          ? `<img src="/uploads/${post.photo}" alt="Post photo" onclick="showFullScreenImage('/uploads/${post.photo}')">`
           : ""
       }
     `;
     postsDiv.appendChild(postDiv);
   }
+
+  window.showFullScreenImage = function(imageSrc) {
+    const fullscreenDiv = document.createElement("div");
+    fullscreenDiv.classList.add("fullscreen-img");
+    fullscreenDiv.innerHTML = `<img src="${imageSrc}" alt="Full size photo" onclick="closeFullScreenImage()">`;
+    document.body.appendChild(fullscreenDiv);
+    setTimeout(() => {
+      fullscreenDiv.classList.add("visible");
+    }, 10); // Petite temporisation pour appliquer l'effet de transition
+  }
+
+  window.closeFullScreenImage = function() {
+    const fullscreenDiv = document.querySelector(".fullscreen-img");
+    if (fullscreenDiv) {
+      fullscreenDiv.classList.remove("visible");
+      setTimeout(() => {
+        fullscreenDiv.remove();
+      }, 300); // Temporisation pour permettre l'effet de transition avant de supprimer l'élément
+    }
+  }
+
 
   // Charger les utilisateurs au chargement de la page
   async function loadUsers() {
@@ -274,46 +300,38 @@ document.addEventListener("DOMContentLoaded", () => {
     togglePassword.addEventListener("click", () => {
       const passwordInput = document.getElementById("password");
       const type =
-        passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
       const toggleButtonText = type === "password" ? "Show" : "Hide";
       togglePassword.textContent = toggleButtonText;
-    });
-  }
-
-  const toggleLoginPassword = document.getElementById("toggleLoginPassword");
-  if (toggleLoginPassword) {
-    toggleLoginPassword.addEventListener("click", () => {
+      });
+      }
+      
+      const toggleLoginPassword = document.getElementById("toggleLoginPassword");
+      if (toggleLoginPassword) {
+      toggleLoginPassword.addEventListener("click", () => {
       const passwordInput = document.getElementById("loginPassword");
       const type =
-        passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
       const toggleButtonText = type === "password" ? "Show" : "Hide";
       toggleLoginPassword.textContent = toggleButtonText;
-    });
-  }
-});
-
-async function loadPosts() {
-  try {
-    const response = await fetch("http://localhost:5002/api/posts");
-    const posts = await response.json();
-    const postsContainer = document.getElementById("postsContainer");
-    posts.forEach((post) => {
-      const postDiv = document.createElement("div");
-      postDiv.innerHTML = `
-            <p>${post.message}</p>
-            ${
-              post.photo
-                ? `<img src="uploads/${post.photo}" alt="Post photo">`
-                : ""
-            }
-          `;
-      postsContainer.appendChild(postDiv);
-    });
-  } catch (error) {
-    console.error("Error loading posts:", error);
-  }
-}
-
-loadPosts();
+      });
+      }
+      
+      // Charger les posts au chargement de la page
+      async function loadPosts() {
+      try {
+      const response = await fetch("http://localhost:5002/api/posts");
+      const posts = await response.json();
+      const postsContainer = document.getElementById("postsContainer");
+      posts.forEach((post) => {
+      displayPost(post);
+      });
+      } catch (error) {
+      console.error("Error loading posts:", error);
+      }
+      }
+      
+      loadPosts();
+      });

@@ -134,6 +134,7 @@ footer {
 }
 #posts {
     display: flex;
+    flex-direction: column;
     overflow-x: auto;
     white-space: nowrap;
     border: 1px solid #ccc;
