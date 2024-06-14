@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./config/database");
+const sequelize = require("./config/database.js");
 const multer = require("multer");
 const path = require("path");
 
@@ -43,7 +43,7 @@ sequelize
   .sync({ alter: true }) // Utilisez `alter: true` pour mettre à jour les tables sans les recréer
   .then(async () => {
     console.log("Database synced");
-    const User = require("./models/User");
+    const User = require("./models/User.js");
 
     // Vérifier si les utilisateurs existent déjà
     const user1 = await User.findOne({ where: { email: "user1@example.com" } });

@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${post.message}</p>
       ${
         post.photo
-          ? `<img src="/uploads/${post.photo}" alt="Post photo" onclick="showFullScreenImage('/uploads/${post.photo}')">`
+          ? `<img src="/uploads/${post.photo}" alt="Post photo" onclick="showFullScreenImage('/uploads/${post.photo}')" style="max-width: 100px; cursor: pointer;">`
           : ""
       }
     `;
@@ -248,12 +248,12 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeFullScreenImage = function() {
     const fullscreenDiv = document.querySelector(".fullscreen-img");
     if (fullscreenDiv) {
-      fullscreenDiv.classList.remove("visible");
-      setTimeout(() => {
-        fullscreenDiv.remove();
-      }, 300); // Temporisation pour permettre l'effet de transition avant de supprimer l'élément
+    fullscreenDiv.classList.remove("visible");
+    setTimeout(() => {
+    fullscreenDiv.remove();
+    }, 300); // Temporisation pour permettre l’effet de transition avant de supprimer l’élément
     }
-  }
+    }
 
 
   // Charger les utilisateurs au chargement de la page
