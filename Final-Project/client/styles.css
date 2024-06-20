@@ -76,7 +76,7 @@ button {
     font-size: 160Zpx;
     border: none;
     border-radius: 5px;
-    background-color: #fbb214ba;
+    background-color: darkblue;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
